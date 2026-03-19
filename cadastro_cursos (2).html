@@ -1,0 +1,1864 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Gerenciador de Cursos</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --ink: #0d0d0f;
+  --ink2: #3a3a42;
+  --ink3: #7a7a86;
+  --surface: #ffffff;
+  --surface2: #f4f4f6;
+  --surface3: #eaeaee;
+  --accent: #2563eb;
+  --accent-light: #dbeafe;
+  --accent-dark: #1d4ed8;
+  --accent-grad: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  --green: #16a34a;
+  --green-light: #dcfce7;
+  --red: #dc2626;
+  --red-light: #fee2e2;
+  --amber: #d97706;
+  --amber-light: #fef3c7;
+  --border: rgba(0,0,0,0.08);
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  --shadow: 0 4px 16px rgba(0,0,0,0.08), 0 1px 4px rgba(0,0,0,0.04);
+  --shadow-lg: 0 12px 40px rgba(0,0,0,0.12), 0 4px 12px rgba(0,0,0,0.06);
+  --radius: 14px;
+  --radius-sm: 8px;
+  --radius-xs: 6px;
+  --font-display: 'Syne', sans-serif;
+  --font-body: 'DM Sans', sans-serif;
+  --transition: 0.18s cubic-bezier(0.4,0,0.2,1);
+  --sidebar-bg: var(--surface);
+  --sidebar-text: var(--ink);
+  --sidebar-sub: var(--ink3);
+  --sidebar-border: var(--border);
+  --sidebar-item-hover: var(--surface2);
+  --sidebar-item-active-bg: var(--accent-light);
+  --sidebar-item-active-border: rgba(37,99,235,0.2);
+  --logo-icon-bg: var(--accent);
+  --ftab-active-bg: var(--accent-light);
+  --ftab-active-color: var(--accent);
+}
+
+/* ── TEMAS ── */
+[data-theme="vermelho"] {
+  --accent: #e11d48;
+  --accent-light: #ffe4e6;
+  --accent-dark: #be123c;
+  --accent-grad: linear-gradient(135deg, #f43f5e 0%, #be123c 100%);
+  --sidebar-bg: linear-gradient(160deg, #fff1f2 0%, #ffe4e6 100%);
+  --logo-icon-bg: var(--accent);
+  --ftab-active-bg: #ffe4e6;
+  --ftab-active-color: #e11d48;
+  --sidebar-item-active-bg: #ffe4e6;
+  --sidebar-item-active-border: rgba(225,29,72,0.2);
+}
+
+[data-theme="verde"] {
+  --accent: #16a34a;
+  --accent-light: #dcfce7;
+  --accent-dark: #15803d;
+  --accent-grad: linear-gradient(135deg, #22c55e 0%, #15803d 100%);
+  --sidebar-bg: linear-gradient(160deg, #f0fdf4 0%, #dcfce7 100%);
+  --logo-icon-bg: var(--accent);
+  --ftab-active-bg: #dcfce7;
+  --ftab-active-color: #16a34a;
+  --sidebar-item-active-bg: #dcfce7;
+  --sidebar-item-active-border: rgba(22,163,74,0.2);
+}
+
+[data-theme="roxo"] {
+  --accent: #7c3aed;
+  --accent-light: #ede9fe;
+  --accent-dark: #6d28d9;
+  --accent-grad: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%);
+  --sidebar-bg: linear-gradient(160deg, #f5f3ff 0%, #ede9fe 100%);
+  --logo-icon-bg: var(--accent);
+  --ftab-active-bg: #ede9fe;
+  --ftab-active-color: #7c3aed;
+  --sidebar-item-active-bg: #ede9fe;
+  --sidebar-item-active-border: rgba(124,58,237,0.2);
+}
+
+[data-theme="laranja"] {
+  --accent: #ea580c;
+  --accent-light: #ffedd5;
+  --accent-dark: #c2410c;
+  --accent-grad: linear-gradient(135deg, #f97316 0%, #c2410c 100%);
+  --sidebar-bg: linear-gradient(160deg, #fff7ed 0%, #ffedd5 100%);
+  --logo-icon-bg: var(--accent);
+  --ftab-active-bg: #ffedd5;
+  --ftab-active-color: #ea580c;
+  --sidebar-item-active-bg: #ffedd5;
+  --sidebar-item-active-border: rgba(234,88,12,0.2);
+}
+
+[data-theme="dark"] {
+  --ink: #f0f0f4;
+  --ink2: #b8b8c4;
+  --ink3: #6b6b7a;
+  --surface: #16161a;
+  --surface2: #1e1e24;
+  --surface3: #26262e;
+  --accent: #3b82f6;
+  --accent-light: #1e3a5f;
+  --accent-dark: #60a5fa;
+  --accent-grad: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+  --green: #22c55e;
+  --green-light: #14301f;
+  --red: #f87171;
+  --red-light: #3b1212;
+  --amber: #fbbf24;
+  --amber-light: #3b2a08;
+  --border: rgba(255,255,255,0.07);
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
+  --shadow: 0 4px 16px rgba(0,0,0,0.4);
+  --shadow-lg: 0 12px 40px rgba(0,0,0,0.5);
+  --sidebar-bg: #0d0d0f;
+  --logo-icon-bg: #3b82f6;
+  --ftab-active-bg: #1e3a5f;
+  --ftab-active-color: #60a5fa;
+  --sidebar-item-active-bg: #1e3a5f;
+  --sidebar-item-active-border: rgba(59,130,246,0.3);
+}
+
+/* ── EFEITOS DE ALERTA DE PROVA ── */
+
+/* Urgente: ≤7 dias */
+.alerta-urgente {
+  position: relative;
+  overflow: hidden;
+}
+.alerta-urgente::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(220,38,38,0.08) 0%, rgba(239,68,68,0.04) 100%);
+  pointer-events: none;
+  z-index: 0;
+}
+.alerta-urgente .ci-title,
+.alerta-urgente .ci-sub { position: relative; z-index: 1; }
+.alerta-urgente .ci-status { animation: pulse-red 1.2s ease-in-out infinite; }
+@keyframes pulse-red {
+  0%,100% { box-shadow: 0 0 0 0 rgba(220,38,38,0.7); transform: scale(1); }
+  50%      { box-shadow: 0 0 0 5px rgba(220,38,38,0); transform: scale(1.3); }
+}
+
+/* Em breve: ≤30 dias */
+.alerta-breve .ci-status { animation: pulse-amber 1.8s ease-in-out infinite; }
+@keyframes pulse-amber {
+  0%,100% { box-shadow: 0 0 0 0 rgba(217,119,6,0.7); transform: scale(1); }
+  50%      { box-shadow: 0 0 0 5px rgba(217,119,6,0); transform: scale(1.2); }
+}
+
+/* Banner de alerta no topo do painel de detalhe */
+.alerta-banner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 1.5rem;
+  font-size: 13px;
+  font-weight: 500;
+  border-bottom: 1px solid var(--border);
+  animation: slideDown 0.3s ease;
+}
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-8px); }
+  to   { opacity: 1; transform: none; }
+}
+.alerta-banner.urgente {
+  background: var(--red-light);
+  color: var(--red);
+  border-bottom-color: rgba(220,38,38,0.15);
+}
+.alerta-banner.breve {
+  background: var(--amber-light);
+  color: var(--amber);
+  border-bottom-color: rgba(217,119,6,0.15);
+}
+.alerta-banner svg { width: 16px; height: 16px; flex-shrink: 0; }
+.alerta-banner .ab-pill {
+  margin-left: auto;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 10px;
+  border-radius: 100px;
+  letter-spacing: 0.3px;
+}
+.alerta-banner.urgente .ab-pill { background: var(--red); color: #fff; }
+.alerta-banner.breve   .ab-pill { background: var(--amber); color: #fff; }
+
+/* Countdown urgente: pisca e brilha */
+.countdown-card.urgente-countdown {
+  animation: countdown-pulse 2s ease-in-out infinite;
+}
+@keyframes countdown-pulse {
+  0%,100% { box-shadow: 0 4px 24px rgba(220,38,38,0.3); }
+  50%      { box-shadow: 0 4px 40px rgba(220,38,38,0.65); }
+}
+.countdown-card.urgente-countdown { background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%) !important; }
+
+/* Barra de progresso da prova */
+.prova-progress-wrap {
+  padding: 0.75rem 1.5rem;
+  border-bottom: 1px solid var(--border);
+}
+.prova-progress-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: var(--ink3);
+  margin-bottom: 5px;
+}
+.prova-progress-bar {
+  height: 6px;
+  background: var(--surface3);
+  border-radius: 100px;
+  overflow: hidden;
+}
+.prova-progress-fill {
+  height: 100%;
+  border-radius: 100px;
+  transition: width 0.6s cubic-bezier(0.4,0,0.2,1);
+}
+.prova-fill-ok     { background: linear-gradient(90deg, #16a34a, #22c55e); }
+.prova-fill-breve  { background: linear-gradient(90deg, #d97706, #fbbf24); }
+.prova-fill-urgente { background: linear-gradient(90deg, #dc2626, #f87171); animation: fill-glow 1.5s ease-in-out infinite; }
+@keyframes fill-glow {
+  0%,100% { opacity: 1; } 50% { opacity: 0.7; }
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--surface2);
+  color: var(--ink);
+  min-height: 100vh;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+/* ── Layout ── */
+.shell {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  min-height: 100vh;
+}
+
+/* ── Sidebar ── */
+.sidebar {
+  background: var(--sidebar-bg, var(--surface));
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+}
+
+.sidebar-header {
+  padding: 2rem 1.5rem 1.5rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 4px;
+}
+
+.logo-icon {
+  width: 36px;
+  height: 36px;
+  background: var(--logo-icon-bg, var(--accent));
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logo-icon svg { width: 18px; height: 18px; }
+
+.logo-text {
+  font-family: var(--font-display);
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: -0.3px;
+}
+
+.sidebar-sub {
+  font-size: 12px;
+  color: var(--ink3);
+  margin-top: 2px;
+}
+
+/* Stats */
+.stats-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 8px;
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.stat {
+  background: var(--surface2);
+  border-radius: var(--radius-sm);
+  padding: 10px 8px;
+  text-align: center;
+}
+
+.stat-num {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1;
+}
+
+.stat-label {
+  font-size: 10px;
+  color: var(--ink3);
+  margin-top: 3px;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+/* Search */
+.search-wrap {
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.search-field {
+  position: relative;
+}
+
+.search-field svg {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 15px;
+  height: 15px;
+  color: var(--ink3);
+  pointer-events: none;
+}
+
+.search-field input {
+  width: 100%;
+  height: 36px;
+  padding: 0 10px 0 32px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface2);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 13px;
+  outline: none;
+  transition: border-color var(--transition), box-shadow var(--transition);
+}
+
+.search-field input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(37,99,235,0.12);
+  background: var(--surface);
+}
+
+.search-field input::placeholder { color: var(--ink3); }
+
+/* Filter tabs */
+.filter-tabs {
+  display: flex;
+  gap: 4px;
+  padding: 0.75rem 1.5rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.ftab {
+  flex: 1;
+  height: 28px;
+  border: none;
+  border-radius: var(--radius-xs);
+  background: transparent;
+  color: var(--ink3);
+  font-family: var(--font-body);
+  font-size: 12px;
+  cursor: pointer;
+  transition: all var(--transition);
+}
+
+.ftab.active {
+  background: var(--ftab-active-bg, var(--accent-light));
+  color: var(--ftab-active-color, var(--accent));
+  font-weight: 500;
+}
+
+.ftab:hover:not(.active) { background: var(--surface2); color: var(--ink2); }
+
+/* Sort */
+.sort-wrap {
+  padding: 0.5rem 1.5rem 0.75rem;
+}
+
+.sort-wrap label { font-size: 11px; color: var(--ink3); text-transform: uppercase; letter-spacing: 0.4px; display: block; margin-bottom: 5px; }
+
+.sort-wrap select {
+  width: 100%;
+  height: 32px;
+  padding: 0 8px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface2);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 13px;
+  outline: none;
+  cursor: pointer;
+}
+
+/* Course list */
+.course-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0.5rem;
+}
+
+.course-item {
+  padding: 12px 14px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background var(--transition);
+  margin-bottom: 2px;
+  border: 1px solid transparent;
+  position: relative;
+}
+
+.course-item:hover { background: var(--surface2); }
+.course-item.active { background: var(--sidebar-item-active-bg, var(--accent-light)); border-color: var(--sidebar-item-active-border, rgba(37,99,235,0.2)); }
+
+.ci-title {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink);
+  margin-bottom: 4px;
+  line-height: 1.4;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-right: 20px;
+}
+
+.ci-sub {
+  font-size: 11px;
+  color: var(--ink3);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.ci-dot { width: 3px; height: 3px; border-radius: 50%; background: var(--ink3); }
+
+.ci-status {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+}
+
+.status-ok     { background: var(--green); }
+.status-soon   { background: var(--amber); }
+.status-past   { background: var(--ink3); }
+
+.empty-state {
+  text-align: center;
+  padding: 2rem 1rem;
+  color: var(--ink3);
+}
+
+.empty-state svg { width: 36px; height: 36px; margin: 0 auto 10px; display: block; opacity: 0.4; }
+.empty-state p { font-size: 13px; }
+
+/* Sidebar footer */
+.sidebar-footer {
+  padding: 1rem 1.5rem;
+  border-top: 1px solid var(--border);
+  display: flex;
+  gap: 6px;
+}
+
+.btn-sm {
+  flex: 1;
+  height: 30px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xs);
+  background: var(--surface2);
+  color: var(--ink2);
+  font-family: var(--font-body);
+  font-size: 11px;
+  cursor: pointer;
+  transition: all var(--transition);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+.btn-sm:hover { background: var(--surface3); color: var(--ink); }
+.btn-sm.danger:hover { background: var(--red-light); color: var(--red); border-color: rgba(220,38,38,0.3); }
+.btn-sm svg { width: 12px; height: 12px; }
+
+/* ── Main ── */
+.main {
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+/* Main header */
+.main-header {
+  padding: 2rem 2rem 0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.main-title {
+  font-family: var(--font-display);
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--ink);
+  letter-spacing: -0.5px;
+  line-height: 1.2;
+}
+
+.main-sub { font-size: 13px; color: var(--ink3); margin-top: 3px; }
+
+/* ── Form card ── */
+.form-card {
+  margin: 1.5rem 2rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.form-card-header {
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.form-card-header svg { width: 18px; height: 18px; color: var(--accent); }
+
+.form-card-title {
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.form-card-sub { font-size: 12px; color: var(--ink3); margin-top: 1px; }
+
+.form-body { padding: 1.5rem; }
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.form-group { display: flex; flex-direction: column; gap: 5px; }
+.form-group.full { grid-column: 1 / -1; }
+
+.form-group label {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--ink2);
+  letter-spacing: 0.1px;
+}
+
+.form-group label span.req { color: var(--accent); margin-left: 2px; }
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  height: 40px;
+  padding: 0 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface2);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 14px;
+  outline: none;
+  transition: border-color var(--transition), box-shadow var(--transition), background var(--transition);
+  width: 100%;
+}
+
+.form-group textarea {
+  height: auto;
+  min-height: 80px;
+  padding: 10px 12px;
+  resize: vertical;
+  line-height: 1.5;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  border-color: var(--accent);
+  background: var(--surface);
+  box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder { color: var(--ink3); }
+
+.form-group input.error { border-color: var(--red); }
+.field-error { font-size: 11px; color: var(--red); margin-top: 2px; }
+
+/* Date group */
+.dates-group {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 14px;
+}
+
+/* Tags input */
+.tags-input-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  padding: 6px 8px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface2);
+  min-height: 40px;
+  align-items: center;
+  cursor: text;
+  transition: border-color var(--transition), box-shadow var(--transition);
+}
+
+.tags-input-wrap:focus-within {
+  border-color: var(--accent);
+  background: var(--surface);
+  box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
+}
+
+.tag-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  height: 22px;
+  padding: 0 8px;
+  border-radius: 100px;
+  background: var(--accent-light);
+  color: var(--accent);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.tag-chip button {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  color: var(--accent);
+  font-size: 14px;
+  line-height: 1;
+  opacity: 0.6;
+  transition: opacity var(--transition);
+}
+
+.tag-chip button:hover { opacity: 1; }
+
+.tags-input-field {
+  border: none !important;
+  background: transparent !important;
+  padding: 0 4px !important;
+  height: 24px !important;
+  font-size: 13px !important;
+  flex: 1;
+  min-width: 80px;
+  box-shadow: none !important;
+}
+
+/* Progress bar */
+.progress-wrap { margin-bottom: 1.25rem; }
+
+.progress-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: var(--ink3);
+  margin-bottom: 6px;
+}
+
+.progress-bar {
+  height: 4px;
+  background: var(--surface3);
+  border-radius: 100px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 100px;
+  transition: width 0.4s ease;
+}
+
+/* Form actions */
+.form-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 1.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--border);
+}
+
+.btn-primary {
+  height: 42px;
+  padding: 0 1.5rem;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition);
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  flex: 1;
+  justify-content: center;
+}
+
+.btn-primary:hover { background: var(--accent-dark); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(37,99,235,0.3); }
+.btn-primary:active { transform: none; }
+
+.btn-secondary {
+  height: 42px;
+  padding: 0 1.25rem;
+  background: var(--surface2);
+  color: var(--ink2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-body);
+  font-size: 14px;
+  cursor: pointer;
+  transition: all var(--transition);
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.btn-secondary:hover { background: var(--surface3); color: var(--ink); }
+
+.btn-danger {
+  height: 42px;
+  padding: 0 1.25rem;
+  background: transparent;
+  color: var(--red);
+  border: 1px solid rgba(220,38,38,0.25);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-body);
+  font-size: 14px;
+  cursor: pointer;
+  transition: all var(--transition);
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.btn-danger:hover { background: var(--red-light); }
+
+/* ── Detail panel ── */
+.detail-panel {
+  margin: 0 2rem 2rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  display: none;
+}
+
+.detail-header {
+  padding: 1.5rem;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.detail-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-sm);
+  background: var(--accent-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.detail-icon svg { width: 22px; height: 22px; color: var(--accent); }
+
+.detail-name {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.3;
+}
+
+.detail-cargo {
+  font-size: 13px;
+  color: var(--ink3);
+  margin-top: 2px;
+}
+
+.detail-badges {
+  display: flex;
+  gap: 6px;
+  margin-top: 8px;
+  flex-wrap: wrap;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  font-weight: 500;
+  padding: 3px 8px;
+  border-radius: 100px;
+}
+
+.badge-green  { background: var(--green-light);  color: var(--green); }
+.badge-amber  { background: var(--amber-light);  color: var(--amber); }
+.badge-gray   { background: var(--surface3);     color: var(--ink3); }
+.badge-blue   { background: var(--accent-light); color: var(--accent); }
+
+.detail-actions {
+  margin-left: auto;
+  display: flex;
+  gap: 6px;
+}
+
+.detail-body {
+  padding: 1.5rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 1rem;
+}
+
+.detail-field label {
+  font-size: 11px;
+  color: var(--ink3);
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.detail-field .val {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.detail-notes {
+  grid-column: 1 / -1;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+}
+
+.detail-notes label {
+  font-size: 11px;
+  color: var(--ink3);
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  display: block;
+  margin-bottom: 6px;
+}
+
+.detail-notes p {
+  font-size: 14px;
+  color: var(--ink2);
+  line-height: 1.6;
+}
+
+/* Countdown */
+.countdown-card {
+  margin: 0 2rem 1.5rem;
+  background: var(--accent-grad, linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%));
+  border-radius: var(--radius);
+  padding: 1.25rem 1.5rem;
+  display: none;
+  align-items: center;
+  gap: 1rem;
+  color: #fff;
+}
+
+.countdown-label { font-size: 12px; opacity: 0.8; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+.countdown-val { font-family: var(--font-display); font-size: 28px; font-weight: 800; line-height: 1; }
+.countdown-unit { font-size: 12px; opacity: 0.7; margin-top: 2px; }
+.countdown-divider { width: 1px; height: 40px; background: rgba(255,255,255,0.2); }
+
+/* Toast */
+.toast-container {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  z-index: 9999;
+}
+
+.toast {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  background: var(--ink);
+  color: var(--surface);
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-weight: 500;
+  box-shadow: var(--shadow-lg);
+  animation: toastIn 0.25s cubic-bezier(0.34,1.56,0.64,1);
+  max-width: 300px;
+}
+
+.toast svg { width: 16px; height: 16px; flex-shrink: 0; }
+.toast.success { background: var(--green); }
+.toast.error   { background: var(--red); }
+.toast.info    { background: var(--accent); }
+
+@keyframes toastIn {
+  from { opacity: 0; transform: translateY(12px) scale(0.95); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* Modal */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  z-index: 1000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.modal-overlay.open { display: flex; }
+
+.modal {
+  background: var(--surface);
+  border-radius: var(--radius);
+  padding: 2rem;
+  max-width: 420px;
+  width: 100%;
+  box-shadow: var(--shadow-lg);
+  animation: modalIn 0.2s ease;
+}
+
+@keyframes modalIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to   { opacity: 1; transform: none; }
+}
+
+.modal h3 {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 8px;
+}
+
+.modal p { font-size: 14px; color: var(--ink2); line-height: 1.6; }
+
+.modal-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 1.5rem;
+  justify-content: flex-end;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .shell { grid-template-columns: 1fr; }
+  .sidebar { position: static; height: auto; }
+  .dates-group { grid-template-columns: 1fr 1fr; }
+  .detail-body { grid-template-columns: 1fr 1fr; }
+  .countdown-card { flex-wrap: wrap; }
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--surface3); border-radius: 100px; }
+
+/* Theme swatches */
+.theme-swatch {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--sw);
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: transform 0.15s, border-color 0.15s, box-shadow 0.15s;
+  outline: none;
+  position: relative;
+}
+.theme-swatch:hover { transform: scale(1.15); }
+.theme-swatch.active {
+  border-color: var(--sw);
+  box-shadow: 0 0 0 3px rgba(0,0,0,0.08), inset 0 0 0 2px #fff;
+  transform: scale(1.1);
+}
+
+/* Animations */
+.fade-in { animation: fadeIn 0.3s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+.course-item { animation: fadeIn 0.2s ease; }
+</style>
+</head>
+<body>
+
+<div class="shell">
+
+  <!-- ── SIDEBAR ── -->
+  <aside class="sidebar">
+
+    <div class="sidebar-header">
+      <div class="logo">
+        <div class="logo-icon">
+          <svg fill="none" viewBox="0 0 24 24" stroke="#fff" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+        </div>
+        <span class="logo-text">ConcursoTrack</span>
+      </div>
+      <div class="sidebar-sub">Gerenciador de cursos</div>
+
+      <!-- Seletor de tema -->
+      <div style="margin-top:12px;">
+        <div style="font-size:11px; color:var(--ink3); text-transform:uppercase; letter-spacing:0.4px; margin-bottom:7px;">Tema</div>
+        <div style="display:flex; gap:6px; flex-wrap:wrap;" id="theme-swatches">
+          <button class="theme-swatch active" data-theme="" title="Azul (padrão)"   style="--sw:#2563eb"></button>
+          <button class="theme-swatch"        data-theme="vermelho" title="Vermelho" style="--sw:#e11d48"></button>
+          <button class="theme-swatch"        data-theme="verde"    title="Verde"    style="--sw:#16a34a"></button>
+          <button class="theme-swatch"        data-theme="roxo"     title="Roxo"     style="--sw:#7c3aed"></button>
+          <button class="theme-swatch"        data-theme="laranja"  title="Laranja"  style="--sw:#ea580c"></button>
+          <button class="theme-swatch"        data-theme="dark"     title="Dark"     style="--sw:#0d0d0f; border:1.5px solid rgba(255,255,255,0.15);"></button>
+        </div>
+      </div>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat">
+        <div class="stat-num" id="stat-total">0</div>
+        <div class="stat-label">Total</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num" id="stat-ativos" style="color:var(--green)">0</div>
+        <div class="stat-label">Ativos</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num" id="stat-prox" style="color:var(--amber)">0</div>
+        <div class="stat-label">Em breve</div>
+      </div>
+    </div>
+
+    <div class="search-wrap">
+      <div class="search-field">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path stroke-linecap="round" d="m21 21-4.35-4.35"/></svg>
+        <input type="text" id="search-input" placeholder="Buscar concurso, cargo..." oninput="filtrarLista()"/>
+      </div>
+    </div>
+
+    <div class="filter-tabs">
+      <button class="ftab active" onclick="setFiltro('todos', this)">Todos</button>
+      <button class="ftab" onclick="setFiltro('ativos', this)">Ativos</button>
+      <button class="ftab" onclick="setFiltro('finalizados', this)">Finalizados</button>
+    </div>
+
+    <div class="sort-wrap">
+      <label>Ordenar por</label>
+      <select id="sort-select" onchange="renderLista()">
+        <option value="atualizacao">Última atualização</option>
+        <option value="prova">Data da prova</option>
+        <option value="edital">Data do edital</option>
+        <option value="nome">Nome A–Z</option>
+      </select>
+    </div>
+
+    <div class="course-list" id="course-list">
+      <div class="empty-state">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+        <p>Nenhum curso cadastrado ainda.</p>
+      </div>
+    </div>
+
+    <div class="sidebar-footer">
+      <button class="btn-sm" onclick="exportarJSON()">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4-4 4m0 0-4-4m4 4V4"/></svg>
+        JSON
+      </button>
+      <button class="btn-sm" onclick="exportarCSV()">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4-4 4m0 0-4-4m4 4V4"/></svg>
+        CSV
+      </button>
+      <label class="btn-sm" style="cursor:pointer;">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8 4-4m0 0 4 4m-4-4v12"/></svg>
+        Importar
+        <input type="file" accept=".json" style="display:none" onchange="importarJSON(event)"/>
+      </label>
+      <button class="btn-sm danger" onclick="confirmarLimpar()">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+        Limpar
+      </button>
+    </div>
+
+  </aside>
+
+  <!-- ── MAIN ── -->
+  <main class="main">
+
+    <div class="main-header">
+      <div>
+        <h1 class="main-title" id="main-title">Novo curso</h1>
+        <p class="main-sub" id="main-sub">Preencha os dados abaixo para cadastrar</p>
+      </div>
+      <div id="header-actions" style="display:none; gap:8px;">
+        <button class="btn-secondary" onclick="novoForm()" style="height:36px; font-size:13px;">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><path stroke-linecap="round" d="M12 4v16m8-8H4"/></svg>
+          Novo
+        </button>
+      </div>
+    </div>
+
+    <!-- Countdown -->
+    <div class="countdown-card" id="countdown-card">
+      <div>
+        <div class="countdown-label">Próxima prova</div>
+        <div class="countdown-val" id="cd-dias">—</div>
+        <div class="countdown-unit">dias restantes</div>
+      </div>
+      <div class="countdown-divider"></div>
+      <div style="flex:1;">
+        <div style="font-size:14px; font-weight:600;" id="cd-nome"></div>
+        <div style="font-size:12px; opacity:0.75; margin-top:3px;" id="cd-data"></div>
+      </div>
+    </div>
+
+    <!-- Form -->
+    <div class="form-card" id="form-card">
+      <div class="form-card-header">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+        <div>
+          <div class="form-card-title" id="form-card-title">Cadastrar curso</div>
+          <div class="form-card-sub">Todos os campos marcados com * são obrigatórios</div>
+        </div>
+      </div>
+      <div class="form-body">
+
+        <div class="progress-wrap">
+          <div class="progress-label">
+            <span>Progresso do formulário</span>
+            <span id="progress-pct">0%</span>
+          </div>
+          <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+        </div>
+
+        <div class="form-grid">
+
+          <div class="form-group">
+            <label>Concurso <span class="req">*</span></label>
+            <input type="text" id="f-concurso" placeholder="Ex: TRT 15ª Região" oninput="atualizarProgress()"/>
+            <span class="field-error" id="err-concurso"></span>
+          </div>
+
+          <div class="form-group">
+            <label>Cargo <span class="req">*</span></label>
+            <input type="text" id="f-cargo" placeholder="Ex: Analista Judiciário" oninput="atualizarProgress()"/>
+            <span class="field-error" id="err-cargo"></span>
+          </div>
+
+          <div class="form-group">
+            <label>Cursinho / Plataforma</label>
+            <input type="text" id="f-cursinho" placeholder="Ex: Estratégia Concursos" oninput="atualizarProgress()"/>
+          </div>
+
+          <div class="form-group">
+            <label>Vagas</label>
+            <input type="number" id="f-vagas" placeholder="Ex: 50" min="0" oninput="atualizarProgress()"/>
+          </div>
+
+          <div class="form-group">
+            <label>Salário (R$)</label>
+            <input type="text" id="f-salario" placeholder="Ex: 8.529,00" oninput="atualizarProgress()"/>
+          </div>
+
+          <div class="form-group">
+            <label>Escolaridade</label>
+            <select id="f-escolaridade" onchange="atualizarProgress()">
+              <option value="">Selecione...</option>
+              <option>Ensino Médio</option>
+              <option>Ensino Técnico</option>
+              <option>Ensino Superior</option>
+              <option>Pós-graduação</option>
+            </select>
+          </div>
+
+          <div class="dates-group">
+            <div class="form-group">
+              <label>Data do Edital <span class="req">*</span></label>
+              <input type="date" id="f-edital" oninput="atualizarProgress()"/>
+              <span class="field-error" id="err-edital"></span>
+            </div>
+            <div class="form-group">
+              <label>Inscrições até</label>
+              <input type="date" id="f-inscricao" oninput="atualizarProgress()"/>
+            </div>
+            <div class="form-group">
+              <label>Data da Prova</label>
+              <input type="date" id="f-prova" oninput="atualizarProgress()"/>
+            </div>
+          </div>
+
+          <div class="form-group full">
+            <label>Matérias / Disciplinas</label>
+            <div class="tags-input-wrap" id="tags-wrap" onclick="document.getElementById('tags-field').focus()">
+              <input type="text" id="tags-field" class="tags-input-field" placeholder="Digite e pressione Enter..." onkeydown="adicionarTag(event)"/>
+            </div>
+          </div>
+
+          <div class="form-group full">
+            <label>Observações</label>
+            <textarea id="f-obs" placeholder="Link do edital, dicas, estratégias de estudo..." oninput="atualizarProgress()"></textarea>
+          </div>
+
+        </div>
+
+        <div class="form-actions">
+          <button class="btn-secondary" id="btn-cancelar" onclick="cancelarEdicao()" style="display:none;">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;"><path stroke-linecap="round" d="M6 18L18 6M6 6l12 12"/></svg>
+            Cancelar
+          </button>
+          <button class="btn-primary" id="btn-salvar" onclick="salvarCurso()">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;"><path stroke-linecap="round" d="M5 13l4 4L19 7"/></svg>
+            Salvar curso
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Detail panel -->
+    <div class="detail-panel fade-in" id="detail-panel">
+      <div class="detail-header">
+        <div class="detail-icon">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+        </div>
+        <div style="flex:1;">
+          <div class="detail-name" id="d-nome"></div>
+          <div class="detail-cargo" id="d-cargo"></div>
+          <div class="detail-badges" id="d-badges"></div>
+        </div>
+        <div class="detail-actions">
+          <button class="btn-secondary" id="btn-editar" onclick="editarCurso()" style="height:34px; font-size:13px;">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><path stroke-linecap="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+            Editar
+          </button>
+          <button class="btn-danger" onclick="confirmarExcluir()" style="height:34px; font-size:13px;">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><path stroke-linecap="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+            Excluir
+          </button>
+        </div>
+      </div>
+      <div class="detail-body" id="detail-body"></div>
+    </div>
+
+  </main>
+</div>
+
+<!-- Modal confirmação -->
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal">
+    <h3 id="modal-title">Confirmar ação</h3>
+    <p id="modal-msg">Tem certeza?</p>
+    <div class="modal-actions">
+      <button class="btn-secondary" onclick="fecharModal()" style="height:36px; font-size:13px;">Cancelar</button>
+      <button class="btn-danger" id="modal-confirm-btn" onclick="" style="height:36px; font-size:13px;">Confirmar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast-container" id="toast-container"></div>
+
+<script>
+/* ── Temas ── */
+(function() {
+  const saved = localStorage.getItem('concurso_tema') || '';
+  if (saved) document.documentElement.setAttribute('data-theme', saved);
+  const btn = document.querySelector(`.theme-swatch[data-theme="${saved}"]`);
+  if (btn) {
+    document.querySelectorAll('.theme-swatch').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  }
+  // aplica bg no body para tema dark
+  if (saved === 'dark') document.body.style.background = '#0d0d0f';
+})();
+
+document.getElementById('theme-swatches').addEventListener('click', e => {
+  const btn = e.target.closest('.theme-swatch');
+  if (!btn) return;
+  const tema = btn.dataset.theme;
+  if (tema) document.documentElement.setAttribute('data-theme', tema);
+  else document.documentElement.removeAttribute('data-theme');
+  localStorage.setItem('concurso_tema', tema);
+  document.querySelectorAll('.theme-swatch').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.body.style.background = tema === 'dark' ? '#0d0d0f' : '';
+});
+
+let cursos = JSON.parse(localStorage.getItem('concurso_cursos') || '[]');
+let filtroAtual = 'todos';
+let cursoSelecionadoId = null;
+let editandoId = null;
+let tags = [];
+
+function salvar() {
+  localStorage.setItem('concurso_cursos', JSON.stringify(cursos));
+  atualizarStats();
+  renderLista();
+  atualizarCountdown();
+}
+
+function uid() {
+  return Date.now().toString(36) + Math.random().toString(36).slice(2);
+}
+
+function fmtData(d) {
+  if (!d) return '—';
+  const [y,m,dia] = d.split('-');
+  return `${dia}/${m}/${y}`;
+}
+
+function diasRestantes(d) {
+  if (!d) return null;
+  const hoje = new Date(); hoje.setHours(0,0,0,0);
+  const alvo = new Date(d + 'T00:00:00');
+  return Math.ceil((alvo - hoje) / 86400000);
+}
+
+function statusCurso(c) {
+  const dr = diasRestantes(c.prova);
+  if (dr === null) return 'sem-data';
+  if (dr < 0) return 'finalizado';
+  if (dr <= 30) return 'em-breve';
+  return 'ativo';
+}
+
+/* ── Stats ── */
+function atualizarStats() {
+  document.getElementById('stat-total').textContent = cursos.length;
+  document.getElementById('stat-ativos').textContent = cursos.filter(c => statusCurso(c) === 'ativo').length;
+  document.getElementById('stat-prox').textContent   = cursos.filter(c => statusCurso(c) === 'em-breve').length;
+}
+
+/* ── Countdown ── */
+function atualizarCountdown() {
+  const futuros = cursos
+    .filter(c => c.prova && diasRestantes(c.prova) >= 0)
+    .sort((a,b) => new Date(a.prova) - new Date(b.prova));
+
+  const card = document.getElementById('countdown-card');
+  if (!futuros.length) { card.style.display = 'none'; return; }
+
+  const prox = futuros[0];
+  const dr = diasRestantes(prox.prova);
+  card.style.display = 'flex';
+  card.className = 'countdown-card' + (dr <= 7 ? ' urgente-countdown' : '');
+  document.getElementById('cd-dias').textContent = dr;
+  document.getElementById('cd-nome').textContent = prox.concurso;
+  document.getElementById('cd-data').textContent = dr <= 7
+    ? '⚠ URGENTE — Prova em ' + fmtData(prox.prova)
+    : 'Prova: ' + fmtData(prox.prova);
+
+  // Barra de progresso da prova
+  atualizarBarraProva(prox);
+}
+
+function atualizarBarraProva(c) {
+  let wrap = document.getElementById('prova-progress-wrap');
+  if (!wrap) {
+    wrap = document.createElement('div');
+    wrap.id = 'prova-progress-wrap';
+    wrap.className = 'prova-progress-wrap';
+    const cd = document.getElementById('countdown-card');
+    cd.parentNode.insertBefore(wrap, cd.nextSibling);
+  }
+  if (!c || !c.prova) { wrap.style.display = 'none'; return; }
+
+  const dr = diasRestantes(c.prova);
+  const total = c.edital
+    ? Math.max(1, Math.ceil((new Date(c.prova) - new Date(c.edital)) / 86400000))
+    : 180;
+  const elapsed = total - dr;
+  const pct = Math.min(100, Math.max(0, Math.round((elapsed / total) * 100)));
+  const fillClass = dr <= 7 ? 'prova-fill-urgente' : dr <= 30 ? 'prova-fill-breve' : 'prova-fill-ok';
+  const label = dr <= 7 ? 'Urgente' : dr <= 30 ? 'Em breve' : 'No prazo';
+
+  wrap.style.display = 'block';
+  wrap.innerHTML = `
+    <div class="prova-progress-label">
+      <span>Tempo até a prova — <strong>${c.concurso}</strong></span>
+      <span style="font-weight:600">${label} · ${dr} dias</span>
+    </div>
+    <div class="prova-progress-bar">
+      <div class="prova-progress-fill ${fillClass}" style="width:${pct}%"></div>
+    </div>`;
+}
+
+/* ── Lista ── */
+function setFiltro(f, el) {
+  filtroAtual = f;
+  document.querySelectorAll('.ftab').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  renderLista();
+}
+
+function filtrarLista() { renderLista(); }
+
+function renderLista() {
+  const busca  = document.getElementById('search-input').value.toLowerCase();
+  const sortBy = document.getElementById('sort-select').value;
+
+  let lista = [...cursos];
+
+  if (filtroAtual === 'ativos')     lista = lista.filter(c => ['ativo','em-breve','sem-data'].includes(statusCurso(c)));
+  if (filtroAtual === 'finalizados') lista = lista.filter(c => statusCurso(c) === 'finalizado');
+
+  if (busca) {
+    lista = lista.filter(c =>
+      (c.concurso||'').toLowerCase().includes(busca) ||
+      (c.cargo||'').toLowerCase().includes(busca) ||
+      (c.cursinho||'').toLowerCase().includes(busca)
+    );
+  }
+
+  lista.sort((a,b) => {
+    if (sortBy === 'nome')       return (a.concurso||'').localeCompare(b.concurso||'');
+    if (sortBy === 'prova')      return (a.prova||'9999') > (b.prova||'9999') ? 1 : -1;
+    if (sortBy === 'edital')     return (a.edital||'9999') > (b.edital||'9999') ? 1 : -1;
+    return (b.atualizadoEm||0) - (a.atualizadoEm||0);
+  });
+
+  const el = document.getElementById('course-list');
+  if (!lista.length) {
+    el.innerHTML = `<div class="empty-state">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+      <p>${cursos.length ? 'Nenhum resultado encontrado.' : 'Nenhum curso cadastrado ainda.'}</p>
+    </div>`;
+    return;
+  }
+
+  el.innerHTML = lista.map(c => {
+    const st = statusCurso(c);
+    const dr = diasRestantes(c.prova);
+    const stClass = st === 'ativo' ? 'status-ok' : st === 'em-breve' ? 'status-soon' : 'status-past';
+    const alertClass = dr !== null && dr >= 0
+      ? (dr <= 7 ? 'alerta-urgente' : dr <= 30 ? 'alerta-breve' : '')
+      : '';
+    const sub = [c.cursinho, c.prova ? fmtData(c.prova) : null].filter(Boolean);
+    const diasLabel = dr !== null && dr >= 0 && dr <= 30
+      ? `<span style="margin-left:4px; font-weight:600; color:${dr<=7?'var(--red)':'var(--amber)'}">· ${dr}d</span>`
+      : '';
+    return `<div class="course-item ${cursoSelecionadoId === c.id ? 'active' : ''} ${alertClass}" onclick="selecionarCurso('${c.id}')">
+      <div class="ci-status ${stClass}"></div>
+      <div class="ci-title">${c.concurso}</div>
+      <div class="ci-sub">
+        <span>${c.cargo || '—'}</span>
+        ${sub.map((s,i) => `${i>0?'<span class="ci-dot"></span>':''}<span>${s}</span>`).join('')}
+        ${diasLabel}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+/* ── Selecionar ── */
+function selecionarCurso(id) {
+  cursoSelecionadoId = id;
+  const c = cursos.find(x => x.id === id);
+  if (!c) return;
+
+  renderLista();
+
+  const st = statusCurso(c);
+  const badgeMap = {
+    'ativo':      `<span class="badge badge-green">Ativo</span>`,
+    'em-breve':   `<span class="badge badge-amber">Em breve</span>`,
+    'finalizado': `<span class="badge badge-gray">Finalizado</span>`,
+    'sem-data':   `<span class="badge badge-blue">Sem data de prova</span>`,
+  };
+
+  document.getElementById('d-nome').textContent  = c.concurso;
+  document.getElementById('d-cargo').textContent = c.cargo || '';
+
+  const dr = diasRestantes(c.prova);
+  document.getElementById('d-badges').innerHTML =
+    (badgeMap[st] || '') +
+    (dr !== null && dr >= 0 ? `<span class="badge badge-blue">${dr} dias para a prova</span>` : '') +
+    (c.vagas ? `<span class="badge badge-gray">${c.vagas} vagas</span>` : '') +
+    (c.escolaridade ? `<span class="badge badge-gray">${c.escolaridade}</span>` : '');
+
+  const campos = [
+    ['Cursinho / Plataforma', c.cursinho],
+    ['Salário', c.salario ? 'R$ ' + c.salario : null],
+    ['Vagas', c.vagas],
+    ['Escolaridade', c.escolaridade],
+    ['Data do edital', fmtData(c.edital)],
+    ['Inscrições até', fmtData(c.inscricao)],
+    ['Data da prova', fmtData(c.prova)],
+    ['Cadastrado em', new Date(c.criadoEm).toLocaleDateString('pt-BR')],
+  ];
+
+  document.getElementById('detail-body').innerHTML =
+    campos.map(([l,v]) => v ? `<div class="detail-field"><label>${l}</label><div class="val">${v}</div></div>` : '').join('') +
+    (c.tags?.length ? `<div class="detail-field" style="grid-column:1/-1"><label>Matérias</label><div style="display:flex;gap:5px;flex-wrap:wrap;margin-top:4px;">${c.tags.map(t=>`<span class="badge badge-blue">${t}</span>`).join('')}</div></div>` : '') +
+    (c.obs ? `<div class="detail-notes"><label>Observações</label><p>${c.obs.replace(/\n/g,'<br>')}</p></div>` : '');
+
+  document.getElementById('detail-panel').style.display = 'block';
+  document.getElementById('header-actions').style.display = 'flex';
+  document.getElementById('main-title').textContent = c.concurso;
+  document.getElementById('main-sub').textContent  = c.cargo || 'Detalhes do curso';
+
+  // Banner de alerta
+  const panel = document.getElementById('detail-panel');
+  let banner = panel.querySelector('.alerta-banner');
+  if (banner) banner.remove();
+  const dr2 = diasRestantes(c.prova);
+  if (dr2 !== null && dr2 >= 0 && dr2 <= 30) {
+    const tipo = dr2 <= 7 ? 'urgente' : 'breve';
+    const icon = dr2 <= 7
+      ? `<svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" d="M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>`
+      : `<svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path stroke-linecap="round" d="M12 8v4m0 4h.01"/></svg>`;
+    const msg = dr2 <= 7
+      ? `Prova em ${dr2 === 0 ? 'hoje' : dr2 + ' dia' + (dr2>1?'s':'')}! Hora de revisar tudo.`
+      : `Faltam ${dr2} dias para a prova. Mantenha o ritmo!`;
+    const pill = dr2 <= 7 ? '🔴 URGENTE' : '🟡 EM BREVE';
+    const b = document.createElement('div');
+    b.className = `alerta-banner ${tipo}`;
+    b.innerHTML = `${icon}<span>${msg}</span><span class="ab-pill">${pill}</span>`;
+    panel.insertBefore(b, panel.firstChild);
+  }
+
+  document.getElementById('form-card').style.display = 'none';
+  document.getElementById('detail-panel').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+/* ── Novo ── */
+function novoForm() {
+  editandoId = null;
+  tags = [];
+  cursoSelecionadoId = null;
+  renderLista();
+  limparForm();
+  document.getElementById('form-card').style.display = 'block';
+  document.getElementById('detail-panel').style.display = 'none';
+  document.getElementById('main-title').textContent = 'Novo curso';
+  document.getElementById('main-sub').textContent  = 'Preencha os dados abaixo para cadastrar';
+  document.getElementById('header-actions').style.display = 'none';
+  document.getElementById('form-card-title').textContent  = 'Cadastrar curso';
+  document.getElementById('btn-salvar').innerHTML = `<svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;"><path stroke-linecap="round" d="M5 13l4 4L19 7"/></svg> Salvar curso`;
+  document.getElementById('btn-cancelar').style.display = 'none';
+  atualizarProgress();
+}
+
+/* ── Editar ── */
+function editarCurso() {
+  const c = cursos.find(x => x.id === cursoSelecionadoId);
+  if (!c) return;
+  editandoId = c.id;
+  tags = c.tags ? [...c.tags] : [];
+
+  document.getElementById('f-concurso').value  = c.concurso || '';
+  document.getElementById('f-cargo').value     = c.cargo || '';
+  document.getElementById('f-cursinho').value  = c.cursinho || '';
+  document.getElementById('f-vagas').value     = c.vagas || '';
+  document.getElementById('f-salario').value   = c.salario || '';
+  document.getElementById('f-escolaridade').value = c.escolaridade || '';
+  document.getElementById('f-edital').value    = c.edital || '';
+  document.getElementById('f-inscricao').value = c.inscricao || '';
+  document.getElementById('f-prova').value     = c.prova || '';
+  document.getElementById('f-obs').value       = c.obs || '';
+
+  renderTags();
+  document.getElementById('form-card').style.display = 'block';
+  document.getElementById('detail-panel').style.display = 'none';
+  document.getElementById('form-card-title').textContent = 'Editar curso';
+  document.getElementById('btn-salvar').innerHTML = `<svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;"><path stroke-linecap="round" d="M5 13l4 4L19 7"/></svg> Atualizar curso`;
+  document.getElementById('btn-cancelar').style.display = 'flex';
+  document.getElementById('main-title').textContent = 'Editando curso';
+  atualizarProgress();
+  document.getElementById('form-card').scrollIntoView({ behavior:'smooth', block:'start' });
+}
+
+function cancelarEdicao() {
+  editandoId = null;
+  if (cursoSelecionadoId) selecionarCurso(cursoSelecionadoId);
+  else novoForm();
+}
+
+/* ── Salvar ── */
+function salvarCurso() {
+  let ok = true;
+  const campos = ['concurso','edital'];
+  campos.forEach(f => {
+    const val = document.getElementById('f-'+f).value.trim();
+    const err = document.getElementById('err-'+f);
+    if (!val) { err.textContent = 'Campo obrigatório'; ok = false; }
+    else err.textContent = '';
+  });
+  if (!ok) { toast('Preencha os campos obrigatórios', 'error'); return; }
+
+  const dados = {
+    concurso:    document.getElementById('f-concurso').value.trim(),
+    cargo:       document.getElementById('f-cargo').value.trim(),
+    cursinho:    document.getElementById('f-cursinho').value.trim(),
+    vagas:       document.getElementById('f-vagas').value.trim(),
+    salario:     document.getElementById('f-salario').value.trim(),
+    escolaridade:document.getElementById('f-escolaridade').value,
+    edital:      document.getElementById('f-edital').value,
+    inscricao:   document.getElementById('f-inscricao').value,
+    prova:       document.getElementById('f-prova').value,
+    obs:         document.getElementById('f-obs').value.trim(),
+    tags:        [...tags],
+    atualizadoEm: Date.now(),
+  };
+
+  if (editandoId) {
+    const idx = cursos.findIndex(x => x.id === editandoId);
+    cursos[idx] = { ...cursos[idx], ...dados };
+    toast('Curso atualizado com sucesso!', 'success');
+    const id = editandoId;
+    editandoId = null;
+    salvar();
+    selecionarCurso(id);
+  } else {
+    const novo = { id: uid(), criadoEm: Date.now(), ...dados };
+    cursos.unshift(novo);
+    toast('Curso cadastrado com sucesso!', 'success');
+    salvar();
+    limparForm();
+    selecionarCurso(novo.id);
+  }
+}
+
+function limparForm() {
+  ['concurso','cargo','cursinho','vagas','salario','obs'].forEach(f => {
+    document.getElementById('f-'+f).value = '';
+  });
+  ['edital','inscricao','prova'].forEach(f => document.getElementById('f-'+f).value = '');
+  document.getElementById('f-escolaridade').value = '';
+  ['concurso','edital'].forEach(f => { const e = document.getElementById('err-'+f); if(e) e.textContent=''; });
+  tags = [];
+  renderTags();
+  atualizarProgress();
+}
+
+/* ── Tags ── */
+function adicionarTag(e) {
+  if (e.key === 'Enter' || e.key === ',') {
+    e.preventDefault();
+    const val = e.target.value.trim().replace(/,$/,'');
+    if (val && !tags.includes(val)) {
+      tags.push(val);
+      renderTags();
+    }
+    e.target.value = '';
+  }
+  if (e.key === 'Backspace' && !e.target.value && tags.length) {
+    tags.pop();
+    renderTags();
+  }
+}
+
+function removerTag(t) {
+  tags = tags.filter(x => x !== t);
+  renderTags();
+}
+
+function renderTags() {
+  const wrap = document.getElementById('tags-wrap');
+  const input = document.getElementById('tags-field');
+  wrap.innerHTML = '';
+  tags.forEach(t => {
+    const chip = document.createElement('span');
+    chip.className = 'tag-chip';
+    chip.innerHTML = `${t}<button type="button" onclick="removerTag('${t}')">&times;</button>`;
+    wrap.appendChild(chip);
+  });
+  wrap.appendChild(input);
+}
+
+/* ── Progress ── */
+function atualizarProgress() {
+  const campos = ['f-concurso','f-cargo','f-cursinho','f-edital','f-prova','f-vagas','f-obs'];
+  const preenchidos = campos.filter(id => {
+    const el = document.getElementById(id);
+    return el && el.value.trim() !== '';
+  }).length;
+  const pct = Math.round((preenchidos / campos.length) * 100);
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('progress-pct').textContent  = pct + '%';
+}
+
+/* ── Excluir ── */
+function confirmarExcluir() {
+  abrirModal(
+    'Excluir curso',
+    'Tem certeza que deseja excluir este curso? Esta ação não pode ser desfeita.',
+    () => {
+      cursos = cursos.filter(x => x.id !== cursoSelecionadoId);
+      cursoSelecionadoId = null;
+      editandoId = null;
+      salvar();
+      document.getElementById('detail-panel').style.display = 'none';
+      document.getElementById('form-card').style.display = 'block';
+      document.getElementById('header-actions').style.display = 'none';
+      document.getElementById('main-title').textContent = 'Novo curso';
+      document.getElementById('main-sub').textContent  = 'Preencha os dados abaixo para cadastrar';
+      fecharModal();
+      toast('Curso excluído', 'info');
+    }
+  );
+}
+
+function confirmarLimpar() {
+  if (!cursos.length) { toast('Não há cursos para excluir', 'info'); return; }
+  abrirModal(
+    'Excluir todos os dados',
+    `Isso removerá todos os ${cursos.length} curso(s) cadastrados. Considere exportar antes.`,
+    () => {
+      cursos = [];
+      cursoSelecionadoId = null;
+      salvar();
+      document.getElementById('detail-panel').style.display = 'none';
+      document.getElementById('form-card').style.display = 'block';
+      document.getElementById('header-actions').style.display = 'none';
+      fecharModal();
+      limparForm();
+      toast('Todos os dados foram removidos', 'info');
+    }
+  );
+}
+
+/* ── Modal ── */
+function abrirModal(title, msg, onConfirm) {
+  document.getElementById('modal-title').textContent = title;
+  document.getElementById('modal-msg').textContent   = msg;
+  document.getElementById('modal-confirm-btn').onclick = onConfirm;
+  document.getElementById('modal-overlay').classList.add('open');
+}
+
+function fecharModal() {
+  document.getElementById('modal-overlay').classList.remove('open');
+}
+
+document.getElementById('modal-overlay').addEventListener('click', e => {
+  if (e.target === e.currentTarget) fecharModal();
+});
+
+/* ── Export / Import ── */
+function exportarJSON() {
+  if (!cursos.length) { toast('Nenhum curso para exportar', 'info'); return; }
+  const blob = new Blob([JSON.stringify(cursos, null, 2)], { type: 'application/json' });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href = url; a.download = 'cursos_concurso.json'; a.click();
+  URL.revokeObjectURL(url);
+  toast('Exportado com sucesso!', 'success');
+}
+
+function exportarCSV() {
+  if (!cursos.length) { toast('Nenhum curso para exportar', 'info'); return; }
+  const cols = ['concurso','cargo','cursinho','vagas','salario','escolaridade','edital','inscricao','prova','obs'];
+  const header = cols.join(';');
+  const rows   = cursos.map(c => cols.map(k => `"${(c[k]||'').toString().replace(/"/g,'""')}"`).join(';'));
+  const csv    = [header, ...rows].join('\n');
+  const blob   = new Blob(['\ufeff'+csv], { type: 'text/csv;charset=utf-8' });
+  const url    = URL.createObjectURL(blob);
+  const a      = document.createElement('a'); a.href=url; a.download='cursos_concurso.csv'; a.click();
+  URL.revokeObjectURL(url);
+  toast('CSV exportado!', 'success');
+}
+
+function importarJSON(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    try {
+      const data = JSON.parse(ev.target.result);
+      if (!Array.isArray(data)) throw new Error();
+      const novos = data.filter(n => !cursos.find(c => c.id === n.id));
+      cursos = [...novos, ...cursos];
+      salvar();
+      toast(`${novos.length} curso(s) importado(s)!`, 'success');
+    } catch { toast('Arquivo inválido', 'error'); }
+  };
+  reader.readAsText(file);
+  e.target.value = '';
+}
+
+/* ── Toast ── */
+function toast(msg, type = 'info') {
+  const icons = {
+    success: `<svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" d="M5 13l4 4L19 7"/></svg>`,
+    error:   `<svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" d="M6 18L18 6M6 6l12 12"/></svg>`,
+    info:    `<svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path stroke-linecap="round" d="M12 8v4m0 4h.01"/></svg>`,
+  };
+  const div = document.createElement('div');
+  div.className = `toast ${type}`;
+  div.innerHTML = (icons[type]||'') + msg;
+  document.getElementById('toast-container').appendChild(div);
+  setTimeout(() => div.remove(), 3200);
+}
+
+/* ── Init ── */
+atualizarStats();
+renderLista();
+atualizarCountdown();
+atualizarProgress();
+</script>
+</body>
+</html>
